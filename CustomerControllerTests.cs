@@ -4,7 +4,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using WebAPIStarter.Controllers;
-using WebAPIStarter.Models;
+using WebAPIStarterData.Models;
 using Xunit;
 using WebAPIStarter.Services.CustomerService;
 

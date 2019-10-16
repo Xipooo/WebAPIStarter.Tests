@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebAPIStarter\WebAPIStarter.csproj" />
+    <ProjectReference Include="..\WebAPIStarterData\WebAPIStarterData.csproj" />
   </ItemGroup>
 
 </Project>
