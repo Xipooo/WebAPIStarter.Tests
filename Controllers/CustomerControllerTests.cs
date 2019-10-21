@@ -8,7 +8,7 @@ using WebAPIStarterData.Models;
 using Xunit;
 using WebAPIStarter.Services.CustomerService;
 
-namespace WebAPIStarter.Tests
+namespace WebAPIStarter.Tests.Controllers
 {
     public class CustomerControllerTests
     {
