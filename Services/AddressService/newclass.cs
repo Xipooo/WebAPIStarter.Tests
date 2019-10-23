@@ -29,6 +29,7 @@ namespace WebAPIStarter.Tests.Services.AddressService
 
             AddressType addressType = new AddressType { AddressTypeName = "Home" };
             addressType = context.AddressTypes.Add(addressType).Entity;
+            context.SaveChanges();
             Address fakeAddress = new Address
             {
                 Line1 = "123 Main St.",
@@ -47,6 +48,90 @@ namespace WebAPIStarter.Tests.Services.AddressService
                 a.City == fakeAddress.City &&
                 a.Zipcode == fakeAddress.Zipcode
                 ).Should().BeTrue();
+        }
+
+        [Fact]
+        public void Add_WhenCalledWithAddressMissingLine1_ThrowsArgumentException()
+        {
+            //Given
+            var SUT = new InMemoryDatabaseAddressService(context);
+            Address fakeAddress = new Address();
+            context.Database.EnsureDeleted();
+
+            //When
+            Action act = () => SUT.Add(fakeAddress);
+
+            //Then
+            act.Should().Throw<ArgumentException>().Where(err => err.Message.Equals("Line1 not set on address."));
+        }
+
+        [Fact]
+        public void Add_WhenCalledWithInvalidAddressTypeId_ThrowsArgumentException()
+        {
+            //Given
+            var SUT = new InMemoryDatabaseAddressService(context);
+            Address fakeAddress = new Address
+            {
+                Line1 = "123 Main St.",
+                AddressTypeId = 1
+            };
+            context.Database.EnsureDeleted();
+
+            //When
+            Action act = () => SUT.Add(fakeAddress);
+
+            //Then
+            act.Should().Throw<ArgumentException>().Where(err => err.Message.Equals("Given addressTypeId not found in database."));
+        }
+
+        [Fact]
+        public void GetOne_WhenCalledWithIdOfAddress_ReturnsThatAddress()
+        {
+            //Given
+            var SUT = new InMemoryDatabaseAddressService(context);
+            AddressType fakeAddressType = new AddressType { AddressTypeName = "Home" };
+            fakeAddressType = context.AddressTypes.Add(fakeAddressType).Entity;
+            Address fakeAddress = new Address
+            {
+                Line1 = "123 Main St.",
+                City = "Mainville",
+                Zipcode = "00011",
+                Country = "USA",
+                AddressTypeId = fakeAddressType.Id
+            };
+            fakeAddress = context.Addresses.Add(fakeAddress).Entity;
+            context.SaveChanges();
+
+            //When
+            Address result = SUT.GetOne(fakeAddress.Id);
+
+            //Then
+            result.Should().BeEquivalentTo(fakeAddress);
+        }
+
+        [Fact]
+        public void Delete_WhenCalledWithAddressId_RemovesAddressFromDatabase()
+        {
+            //Given
+            var SUT = new InMemoryDatabaseAddressService(context);
+            AddressType fakeAddressType = new AddressType { AddressTypeName = "Home" };
+            fakeAddressType = context.AddressTypes.Add(fakeAddressType).Entity;
+            Address fakeAddress = new Address
+            {
+                Line1 = "123 Main St.",
+                City = "Mainville",
+                Zipcode = "00011",
+                Country = "USA",
+                AddressTypeId = fakeAddressType.Id
+            };
+            fakeAddress = context.Addresses.Add(fakeAddress).Entity;
+            context.SaveChanges();
+
+            //When
+            SUT.Delete(fakeAddress.Id);
+
+            //Then
+            context.Addresses.Find(fakeAddress.Id).Should().BeNull();
         }
     }
 }
