@@ -10,12 +10,12 @@ using FluentAssertions;
 
 namespace WebAPIStarter.Tests.Services.AddressService
 {
-    public class InMemoryDatabaseAddressServiceTests
+    public class DatabaseAddressServiceTests
     {
         private DbContextOptions<WebAPIStarterContext> options;
         private WebAPIStarterContext context;
 
-        public InMemoryDatabaseAddressServiceTests()
+        public DatabaseAddressServiceTests()
         {
             options = new DbContextOptionsBuilder<WebAPIStarterContext>().UseInMemoryDatabase("mockdb-AddressService").Options;
             context = new WebAPIStarterContext(options);
@@ -25,7 +25,7 @@ namespace WebAPIStarter.Tests.Services.AddressService
         {
             //Given
 
-            var SUT = new InMemoryDatabaseAddressService(context);
+            var SUT = new DatabaseAddressService(context);
 
             AddressType addressType = new AddressType { AddressTypeName = "Home" };
             addressType = context.AddressTypes.Add(addressType).Entity;
@@ -54,7 +54,7 @@ namespace WebAPIStarter.Tests.Services.AddressService
         public void Add_WhenCalledWithAddressMissingLine1_ThrowsArgumentException()
         {
             //Given
-            var SUT = new InMemoryDatabaseAddressService(context);
+            var SUT = new DatabaseAddressService(context);
             Address fakeAddress = new Address();
             context.Database.EnsureDeleted();
 
@@ -69,7 +69,7 @@ namespace WebAPIStarter.Tests.Services.AddressService
         public void Add_WhenCalledWithInvalidAddressTypeId_ThrowsArgumentException()
         {
             //Given
-            var SUT = new InMemoryDatabaseAddressService(context);
+            var SUT = new DatabaseAddressService(context);
             Address fakeAddress = new Address
             {
                 Line1 = "123 Main St.",
@@ -88,7 +88,7 @@ namespace WebAPIStarter.Tests.Services.AddressService
         public void GetOne_WhenCalledWithIdOfAddress_ReturnsThatAddress()
         {
             //Given
-            var SUT = new InMemoryDatabaseAddressService(context);
+            var SUT = new DatabaseAddressService(context);
             AddressType fakeAddressType = new AddressType { AddressTypeName = "Home" };
             fakeAddressType = context.AddressTypes.Add(fakeAddressType).Entity;
             Address fakeAddress = new Address
@@ -113,7 +113,7 @@ namespace WebAPIStarter.Tests.Services.AddressService
         public void Delete_WhenCalledWithAddressId_RemovesAddressFromDatabase()
         {
             //Given
-            var SUT = new InMemoryDatabaseAddressService(context);
+            var SUT = new DatabaseAddressService(context);
             AddressType fakeAddressType = new AddressType { AddressTypeName = "Home" };
             fakeAddressType = context.AddressTypes.Add(fakeAddressType).Entity;
             Address fakeAddress = new Address

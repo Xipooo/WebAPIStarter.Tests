@@ -13,11 +13,13 @@ namespace WebAPIStarter.Tests.Controllers
     public class AddressControllerTests
     {
         private Mock<IAddressService> MockAddressService => new Mock<IAddressService>();
+
         private List<Address> fakeAddresses => new List<Address> {
                 new Address { Line1 = "123 Main St.", City = "Mainville", Zipcode = "00011", Country = "USA", AddressTypeId = 1 },
                 new Address { Line1 = "456 Simple Ave.", City = "Simpleville", Zipcode = "00012", Country = "USA", AddressTypeId = 1 },
                 new Address { Line1 = "1111 Basic Pl.", City = "Basicville", Zipcode = "11111", Country = "USA", AddressTypeId = 1 }
             };
+
 
         [Fact]
         public void Post_WhenCalledWithAddress_CallsAddressServiceAddMethod()
